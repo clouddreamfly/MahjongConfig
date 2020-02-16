@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/python
 # coding: utf-8
 
 import time
@@ -272,7 +272,10 @@ class HandMahjong:
             elif color == 2:
                 file_name = "mj_tong_%d_l" % (value)
             elif color == 3:
-                file_name = "mj_%02x_l" % (data)
+                if value <= 7 :
+                    file_name = "mj_%02x_l" % (data)
+                else:
+                    file_name = "mj_h_%d_l" % (value - 7)
                 
             mahjong_img = wx.Bitmap('images/mj_left/%s.png' % (file_name))
             
@@ -305,7 +308,10 @@ class HandMahjong:
             elif color == 2:
                 file_name = "mj_tong_%d_t" % (value)
             elif color == 3:
-                file_name = "mj_%02x_t" % (data)
+                if value <= 7 :
+                    file_name = "mj_%02x_t" % (data)
+                else:
+                    file_name = "mj_h_%d_t" % (value - 7)
                 
             mahjong_img = wx.Bitmap('images/mj_top/%s.png' % (file_name))
             
@@ -337,7 +343,10 @@ class HandMahjong:
             elif color == 2:
                 file_name = "mj_tong_%d_r" % (value)
             elif color == 3:
-                file_name = "mj_%02x_r" % (data)
+                if value <= 7 :
+                    file_name = "mj_%02x_r" % (data)
+                else:
+                    file_name = "mj_h_%d_r" % (value - 7)
                 
             mahjong_img = wx.Bitmap('images/mj_right/%s.png' % (file_name))
             
@@ -369,7 +378,10 @@ class HandMahjong:
                 elif color == 2:
                     file_name = "mj_tong_%d" % (value)
                 elif color == 3:
-                    file_name = "mj_%02x" % (data)
+                    if value <= 7 :
+                        file_name = "mj_%02x" % (data)
+                    else:
+                        file_name = "mj_h_%d" % (value - 7)
                     
                 mahjong_img = wx.Bitmap('images/mj_bottom/%s.png' % (file_name))
                 
@@ -420,14 +432,14 @@ class DragCanvas(wx.ScrolledWindow):
         self.heapMahjongList = [0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09,                                 
                                 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19,
                                 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29,
-                                0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37]
+                                0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3A, 0x3B, 0x3C, 0x3D, 0x3E, 0x3F]
         
         self.dealMahjongList = [0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09,
                                 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19,
                                 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29,
                                 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37]
-        self.leftMahjongList = [0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x16, 0x17, 0x18, 0x19]
-        self.topMahjongList = [0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x16, 0x17, 0x18, 0x19]
+        self.leftMahjongList = [0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x16, 0x17, 0x18, 0x19, 0x38, 0x39, 0x3A, 0x3B, 0x3C, 0x3D, 0x3E, 0x3F]
+        self.topMahjongList = [0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x16, 0x17, 0x18, 0x19, 0x38, 0x39, 0x3A, 0x3B, 0x3C, 0x3D, 0x3E, 0x3F]
         self.rightMahjongList = [0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x16, 0x17, 0x18, 0x19]
         self.bottomMahjongList = [0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x16, 0x17, 0x18, 0x19]
         
@@ -451,7 +463,10 @@ class DragCanvas(wx.ScrolledWindow):
             elif color == 2:
                 file_name = "mj_tong_%d_t" % (value)
             elif color == 3:
-                file_name = "mj_%02x_t" % (data)
+                if value <= 7 :
+                    file_name = "mj_%02x_t" % (data)
+                else:
+                    file_name = "mj_h_%d_t" % (value - 7)
                 
             mahjong_img = wx.Bitmap('images/mj_top/%s.png' % (file_name))
             
@@ -481,7 +496,10 @@ class DragCanvas(wx.ScrolledWindow):
             elif color == 2:
                 file_name = "mj_tong_%d_t" % (value)
             elif color == 3:
-                file_name = "mj_%02x_t" % (data)
+                if value <= 7 :
+                    file_name = "mj_%02x_t" % (data)
+                else:
+                    file_name = "mj_h_%d_t" % (value - 7)
                 
             mahjong_img = wx.Bitmap('images/mj_top/%s.png' % (file_name))
             
@@ -523,11 +541,6 @@ class DragCanvas(wx.ScrolledWindow):
         if size.width != 0 and size.height != 0 :
             image = self.bg_bmp.ConvertToImage().Scale(size.width, size.height)
             self.bg_bmp2 = image.ConvertToBitmap()
-            
-        #pos_x = size.width / 2
-        #for shape in self.shapes:  
-            #pos = shape.pos
-            #shape.pos = ((pos[0] + pos_x) / 2, pos[1])
          
         self.Refresh()
 
@@ -611,14 +624,15 @@ class DragCanvas(wx.ScrolledWindow):
             self.RefreshRect(self.hiliteShape.GetRect())
             self.hiliteShape = None
 
-        self.dragShape.pos = (
-            self.dragShape.pos[0] + evt.GetPosition()[0] - self.dragStartPos[0],
-            self.dragShape.pos[1] + evt.GetPosition()[1] - self.dragStartPos[1]
-        )
-
-        self.dragShape.shown = True
-        self.RefreshRect(self.dragShape.GetRect())
-        self.dragShape = None
+        shape = self.FindShape(evt.GetPosition())
+        if shape:        
+            self.dragShape.shown = False
+            self.RefreshRect(self.dragShape.GetRect())
+            self.dragShape = None            
+        else:
+            self.dragShape.shown = True
+            self.RefreshRect(self.dragShape.GetRect())
+            self.dragShape = None
 
 
     # The mouse is moving
@@ -697,27 +711,76 @@ class MahjongSettingDlg(wx.Dialog):
     
     def __init__(self, parent = None, id = -1,):
         
-        wx.Dialog.__init__(self, parent, id, title=u"麻将设置", size=(600, 400))
+        wx.Dialog.__init__(self, parent, id, title=u"麻将设置", size=(640, 530))
         
+        self.parent = parent
         self.panel = wx.Panel(self)
+        frame_sizer = wx.BoxSizer(orient=wx.VERTICAL)
+        self.panel.SetSizer(frame_sizer)        
         
-        label_mahjong_total_count = wx.StaticText(self.panel, label = u"麻将总数目：")
-        self.spin_mahjong_total_count = wx.SpinCtrl(self.panel, value='108', size=(60,-1))    
-        self.spin_mahjong_total_count.SetRange(1, 136)
-        self.spin_mahjong_total_count.SetValue(108)
+        static_box = wx.StaticBox(self.panel, label=u"麻将游戏配置：")
+        static_box_sizer = wx.StaticBoxSizer(static_box, orient=wx.HORIZONTAL)
+        frame_sizer.Add(static_box_sizer, 1, wx.LEFT|wx.RIGHT|wx.EXPAND, 6)
+        
+        label_mahjong_total_count = wx.StaticText(static_box, label = u"麻将总数目：")
+        self.spin_mahjong_total_count = wx.SpinCtrl(static_box, value='136', size=(60,-1))    
+        self.spin_mahjong_total_count.SetRange(0, 168)
+        self.spin_mahjong_total_count.SetValue(136)
+        self.spin_mahjong_total_count.Disable()
+        static_box_sizer.Add(label_mahjong_total_count, 0, wx.LEFT|wx.ALIGN_CENTER_VERTICAL, 6)
+        static_box_sizer.Add(self.spin_mahjong_total_count, 0, wx.ALIGN_CENTER_VERTICAL)
+        static_box_sizer.AddSpacer(18)
+        
+        label_mahjong_player_count = wx.StaticText(static_box, label = u"游戏人数：")
+        self.spin_mahjong_player_count = wx.SpinCtrl(static_box, value='108', size=(60,-1))    
+        self.spin_mahjong_player_count.SetRange(2, 4)
+        self.spin_mahjong_player_count.SetValue(4)
+        static_box_sizer.Add(label_mahjong_player_count, 0, wx.ALIGN_CENTER_VERTICAL)
+        static_box_sizer.Add(self.spin_mahjong_player_count, 0, wx.ALIGN_CENTER_VERTICAL)    
         
         
-        label_mahjong_type_wan  = wx.StaticText(self.panel, label = u"麻将\"万\"：")
-        label_mahjong_type_suo = wx.StaticText(self.panel, label = u"麻将\"索\"：")
-        label_mahjong_type_tong = wx.StaticText(self.panel, label = u"麻将\"筒\"：")
-        label_mahjong_type_zi   = wx.StaticText(self.panel, label = u"麻将\"字\"：")
-        label_mahjong_type_hua  = wx.StaticText(self.panel, label = u"麻将\"花\"：")
+        static_box1 = wx.StaticBox(self.panel, label=u"麻将数目配置：")
+        static_box_sizer1 = wx.StaticBoxSizer(static_box1, orient=wx.VERTICAL)
+        frame_sizer1_1 = wx.BoxSizer(orient=wx.HORIZONTAL)
+        frame_sizer1_2 = wx.BoxSizer(orient=wx.HORIZONTAL)
+        frame_sizer1_3 = wx.BoxSizer(orient=wx.HORIZONTAL)
+        frame_sizer1_4 = wx.BoxSizer(orient=wx.HORIZONTAL)
+        frame_sizer1_5 = wx.BoxSizer(orient=wx.HORIZONTAL)
+        static_box_sizer1.Add(frame_sizer1_1)
+        static_box_sizer1.AddSpacer(4)
+        static_box_sizer1.Add(frame_sizer1_2)
+        static_box_sizer1.AddSpacer(4)
+        static_box_sizer1.Add(frame_sizer1_3)
+        static_box_sizer1.AddSpacer(4)
+        static_box_sizer1.Add(frame_sizer1_4)
+        static_box_sizer1.AddSpacer(4)
+        static_box_sizer1.Add(frame_sizer1_5)
+        frame_sizer.Add(static_box_sizer1, 1, wx.LEFT|wx.RIGHT|wx.BOTTOM|wx.EXPAND, 6)
         
-        img_mahjong_wan_list = []
-        img_mahjong_suo_list = []
-        img_mahjong_tong_list = []
-        img_mahjong_zi_list = []
-        img_mahjong_hua_list = []
+        label_mahjong_type_wan  = wx.StaticText(static_box1, label = u"麻将\"萬\"：")
+        label_mahjong_type_suo = wx.StaticText(static_box1, label = u"麻将\"索\"：")
+        label_mahjong_type_tong = wx.StaticText(static_box1, label = u"麻将\"筒\"：")
+        label_mahjong_type_zi   = wx.StaticText(static_box1, label = u"麻将\"字\"：")
+        label_mahjong_type_hua  = wx.StaticText(static_box1, label = u"麻将\"花\"：")
+        font = label_mahjong_type_wan.GetFont()
+        font.SetPointSize(11) 
+        font.SetWeight(wx.FONTWEIGHT_BOLD)
+        label_mahjong_type_wan.SetFont(font)
+        label_mahjong_type_suo.SetFont(font)
+        label_mahjong_type_tong.SetFont(font)
+        label_mahjong_type_zi.SetFont(font)
+        label_mahjong_type_hua.SetFont(font)
+        frame_sizer1_1.Add(label_mahjong_type_wan, 0, wx.LEFT|wx.ALIGN_CENTER_VERTICAL, 6)
+        frame_sizer1_2.Add(label_mahjong_type_suo, 0, wx.LEFT|wx.ALIGN_CENTER_VERTICAL, 6)
+        frame_sizer1_3.Add(label_mahjong_type_tong, 0, wx.LEFT|wx.ALIGN_CENTER_VERTICAL, 6)
+        frame_sizer1_4.Add(label_mahjong_type_zi, 0, wx.LEFT|wx.ALIGN_CENTER_VERTICAL, 6)
+        frame_sizer1_5.Add(label_mahjong_type_hua, 0, wx.LEFT|wx.ALIGN_CENTER_VERTICAL, 6)
+        
+        self.mahjong_wan_list = []
+        self.mahjong_suo_list = []
+        self.mahjong_tong_list = []
+        self.mahjong_zi_list = []
+        self.mahjong_hua_list = []
         
         mahjong_bg = wx.Bitmap('images/mj_bg/mj_small_bg_t.png')
         for i in range(9):
@@ -725,70 +788,169 @@ class MahjongSettingDlg(wx.Dialog):
             file_name = "mj_w_%d_t" % (i+1)
             mahjong_img = wx.Bitmap('images/mj_top/%s.png'%(file_name))
             mahjong_bmp = self.ImageMerge(mahjong_img, mahjong_bg)            
-            img_mahjong = wx.StaticBitmap(self.panel, bitmap=mahjong_bmp)
-            img_mahjong_wan_list.append(img_mahjong)
+            img_mahjong = wx.StaticBitmap(static_box1, bitmap=mahjong_bmp)
+            spin_mahjong_count = wx.SpinCtrl(static_box1, size=(mahjong_bmp.GetWidth()-10,-1), value='4', min=0, max=4)
+            self.mahjong_wan_list.append({"image": img_mahjong, "card_data": i+1, "mahjong_count": spin_mahjong_count})
+            mahjong_sizer = wx.BoxSizer(orient=wx.VERTICAL)
+            mahjong_sizer.Add(img_mahjong, 0, wx.CENTER)
+            mahjong_sizer.Add(spin_mahjong_count, 0, wx.CENTER)
+            frame_sizer1_1.Add(mahjong_sizer)
+            frame_sizer1_1.AddSpacer(8)
             
             file_name = "mj_tiao_%d_t" % (i+1)
             mahjong_img = wx.Bitmap('images/mj_top/%s.png'%(file_name))
             mahjong_bmp = self.ImageMerge(mahjong_img, mahjong_bg)               
-            img_mahjong = wx.StaticBitmap(self.panel, bitmap=mahjong_bmp)
-            img_mahjong_suo_list.append(img_mahjong)
+            img_mahjong = wx.StaticBitmap(static_box1, bitmap=mahjong_bmp)
+            spin_mahjong_count = wx.SpinCtrl(static_box1, size=(mahjong_bmp.GetWidth()-10,-1), value='4', min=0, max=4)
+            self.mahjong_suo_list.append({"image": img_mahjong, "card_data": 0x10+i+1, "mahjong_count": spin_mahjong_count})
+            mahjong_sizer = wx.BoxSizer(orient=wx.VERTICAL)
+            mahjong_sizer.Add(img_mahjong, 0, wx.CENTER)
+            mahjong_sizer.Add(spin_mahjong_count, 0, wx.CENTER)
+            frame_sizer1_2.Add(mahjong_sizer)
+            frame_sizer1_2.AddSpacer(8)
             
             file_name = "mj_tong_%d_t" % (i+1)
             mahjong_img = wx.Bitmap('images/mj_top/%s.png'%(file_name))
             mahjong_bmp = self.ImageMerge(mahjong_img, mahjong_bg)               
-            img_mahjong = wx.StaticBitmap(self.panel, bitmap=mahjong_bmp)
-            img_mahjong_tong_list.append(img_mahjong)            
+            img_mahjong = wx.StaticBitmap(static_box1, bitmap=mahjong_bmp)
+            spin_mahjong_count = wx.SpinCtrl(static_box1, size=(mahjong_bmp.GetWidth()-10,-1), value='4', min=0, max=4)
+            self.mahjong_tong_list.append({"image": img_mahjong, "card_data": 0x20+i+1, "mahjong_count": spin_mahjong_count})
+            mahjong_sizer = wx.BoxSizer(orient=wx.VERTICAL)
+            mahjong_sizer.Add(img_mahjong, 0, wx.CENTER)
+            mahjong_sizer.Add(spin_mahjong_count, 0, wx.CENTER)
+            frame_sizer1_3.Add(mahjong_sizer)
+            frame_sizer1_3.AddSpacer(8)
             
         
         for i in range(7):
             file_name = "mj_%02x_t" % (0x30+i+1) 
             mahjong_img = wx.Bitmap('images/mj_top/%s.png'%(file_name))
             mahjong_bmp = self.ImageMerge(mahjong_img, mahjong_bg)               
-            img_mahjong = wx.StaticBitmap(self.panel, bitmap=mahjong_bmp)
-            img_mahjong_zi_list.append(img_mahjong)            
+            img_mahjong = wx.StaticBitmap(static_box1, bitmap=mahjong_bmp)
+            spin_mahjong_count = wx.SpinCtrl(static_box1, size=(mahjong_bmp.GetWidth()-10,-1), value='4', min=0, max=4)
+            self.mahjong_zi_list.append({"image": img_mahjong, "card_data": 0x30+i+1, "mahjong_count": spin_mahjong_count})
+            mahjong_sizer = wx.BoxSizer(orient=wx.VERTICAL)
+            mahjong_sizer.Add(img_mahjong, 0, wx.CENTER)
+            mahjong_sizer.Add(spin_mahjong_count, 0, wx.CENTER)
+            frame_sizer1_4.Add(mahjong_sizer)
+            frame_sizer1_4.AddSpacer(8)
             
-        #for i in range(4):
-            #file_name = "mj_%02x_t" % (0x30+7+i+1) 
-            #mahjong_img = wx.Bitmap('images/mj_top/%s.png'%(file_name))
-            #mahjong_bmp = self.ImageMerge(mahjong_img, mahjong_bg)               
-            #img_mahjong = wx.StaticBitmap(self.panel, bitmap=mahjong_bmp)
-            #img_mahjong_hua_list.append(img_mahjong)          
+        for i in range(8):
+            file_name = "mj_h_%d_t" % (i+1) 
+            mahjong_img = wx.Bitmap('images/mj_top/%s.png'%(file_name))
+            mahjong_bmp = self.ImageMerge(mahjong_img, mahjong_bg)               
+            img_mahjong = wx.StaticBitmap(static_box1, bitmap=mahjong_bmp)
+            spin_mahjong_count = wx.SpinCtrl(static_box1, size=(mahjong_bmp.GetWidth()-10,-1), value='0', min=0, max=4)
+            self.mahjong_hua_list.append({"image": img_mahjong, "card_data": 0x30+i+1, "mahjong_count": spin_mahjong_count})
+            mahjong_sizer = wx.BoxSizer(orient=wx.VERTICAL)
+            mahjong_sizer.Add(img_mahjong, 0, wx.CENTER)
+            mahjong_sizer.Add(spin_mahjong_count, 0, wx.CENTER)
+            frame_sizer1_5.Add(mahjong_sizer)
+            frame_sizer1_5.AddSpacer(8)       
+        
+        self.UpdateMahjongTotalCount()
         
         
+        # 控件事件绑定
         self.Bind(wx.EVT_SPINCTRL, self.OnSelectedSpinMahjongTotalCount, self.spin_mahjong_total_count)
-        self.Bind(wx.EVT_TEXT, self.OnChangeSpinMahjongTotalCount, self.spin_mahjong_total_count)      
+        self.Bind(wx.EVT_TEXT, self.OnChangeSpinMahjongTotalCount, self.spin_mahjong_total_count)   
+        self.Bind(wx.EVT_SPINCTRL, self.OnSelectedSpinMahjongTotalCount, self.spin_mahjong_player_count)
+        self.Bind(wx.EVT_TEXT, self.OnChangeSpinMahjongTotalCount, self.spin_mahjong_player_count)           
+        
+        for mahjong_ctrl in self.mahjong_wan_list:
+            self.Bind(wx.EVT_SPINCTRL, self.OnSelectedSpinMahjongTotalCount, mahjong_ctrl["mahjong_count"])
+            self.Bind(wx.EVT_TEXT, self.OnChangeSpinMahjongTotalCount, mahjong_ctrl["mahjong_count"]) 
+        for mahjong_ctrl in self.mahjong_suo_list:
+            self.Bind(wx.EVT_SPINCTRL, self.OnSelectedSpinMahjongTotalCount, mahjong_ctrl["mahjong_count"])
+            self.Bind(wx.EVT_TEXT, self.OnChangeSpinMahjongTotalCount, mahjong_ctrl["mahjong_count"]) 
+        for mahjong_ctrl in self.mahjong_tong_list:
+            self.Bind(wx.EVT_SPINCTRL, self.OnSelectedSpinMahjongTotalCount, mahjong_ctrl["mahjong_count"])
+            self.Bind(wx.EVT_TEXT, self.OnChangeSpinMahjongTotalCount, mahjong_ctrl["mahjong_count"]) 
+        for mahjong_ctrl in self.mahjong_zi_list:
+            self.Bind(wx.EVT_SPINCTRL, self.OnSelectedSpinMahjongTotalCount, mahjong_ctrl["mahjong_count"])
+            self.Bind(wx.EVT_TEXT, self.OnChangeSpinMahjongTotalCount, mahjong_ctrl["mahjong_count"]) 
+        for mahjong_ctrl in self.mahjong_hua_list:
+            self.Bind(wx.EVT_SPINCTRL, self.OnSelectedSpinMahjongTotalCount, mahjong_ctrl["mahjong_count"])
+            self.Bind(wx.EVT_TEXT, self.OnChangeSpinMahjongTotalCount, mahjong_ctrl["mahjong_count"])         
+   
         
         
     def ImageMerge(self, mahjong_img, mahjong_bg): 
         mahjong_bmp = wx.EmptyBitmapRGBA(mahjong_bg.GetWidth(), mahjong_bg.GetHeight())
         memDC = wx.MemoryDC()
         memDC.SelectObject(mahjong_bmp)  
-        
         mahjong_img = mahjong_img.ConvertToImage().Scale(mahjong_bg.GetWidth() - 8, mahjong_bg.GetHeight() - 20)
         mahjong_img = mahjong_img.ConvertToBitmap()        
         memDC.DrawBitmap(mahjong_bg, 0, 0, True)
         memDC.DrawBitmap(mahjong_img, (mahjong_bg.GetWidth()-mahjong_img.GetWidth()) / 2, 0, True)  
         
+        mahjong_bmp = mahjong_bmp.ConvertToImage().Scale(mahjong_bmp.GetWidth() - 4, mahjong_bmp.GetHeight() - 6)
+        mahjong_bmp = mahjong_bmp.ConvertToBitmap()            
+        
         return mahjong_bmp
+    
+    
+    def UpdateMahjongTotalCount(self):
+        
+        mahjong_total_count = 0
+        for mahjong_ctrl in self.mahjong_wan_list:
+            mahjong_total_count += mahjong_ctrl["mahjong_count"].GetValue()
+        for mahjong_ctrl in self.mahjong_suo_list:
+            mahjong_total_count += mahjong_ctrl["mahjong_count"].GetValue()
+        for mahjong_ctrl in self.mahjong_tong_list:
+            mahjong_total_count += mahjong_ctrl["mahjong_count"].GetValue()
+        for mahjong_ctrl in self.mahjong_zi_list:
+            mahjong_total_count += mahjong_ctrl["mahjong_count"].GetValue()
+        for mahjong_ctrl in self.mahjong_hua_list:
+            mahjong_total_count += mahjong_ctrl["mahjong_count"].GetValue()  
+        
+        self.spin_mahjong_total_count.SetValue(mahjong_total_count)
+        
+        
+    def FindMahjongSpinCtrl(self, spin):
+        
+        for mahjong_ctrl in self.mahjong_wan_list:
+            if spin is mahjong_ctrl["mahjong_count"]:  
+                return True
+        for mahjong_ctrl in self.mahjong_suo_list:
+            if spin is mahjong_ctrl["mahjong_count"]:  
+                return True
+        for mahjong_ctrl in self.mahjong_tong_list:
+            if spin is mahjong_ctrl["mahjong_count"]:  
+                return True
+        for mahjong_ctrl in self.mahjong_zi_list:
+            if spin is mahjong_ctrl["mahjong_count"]:  
+                return True
+        for mahjong_ctrl in self.mahjong_hua_list:
+            if spin is mahjong_ctrl["mahjong_count"]:  
+                return True
+            
+        return False
+            
         
     def OnSelectedSpinMahjongTotalCount(self, evt):
         
         spin = evt.GetEventObject()
     
         if spin is self.spin_mahjong_total_count:
-            position_x = spin.GetValue()
+            self.parent.mahjong_total_count = spin.GetValue()
+        elif spin is self.spin_mahjong_player_count:
+            self.parent.mahjong_player_count = spin.GetValue()
         else:
-            pass     
+            if self.FindMahjongSpinCtrl(spin):
+                self.UpdateMahjongTotalCount()
         
     def OnChangeSpinMahjongTotalCount(self, evt):
 
         spin = evt.GetEventObject()
 
         if spin is self.spin_mahjong_total_count:
-            position_x = spin.GetValue()
+            self.parent.mahjong_total_count = spin.GetValue()
+        elif spin is self.spin_mahjong_player_count:
+            self.parent.mahjong_player_count = spin.GetValue()            
         else:
-            pass    
+            if self.FindMahjongSpinCtrl(spin):
+                self.UpdateMahjongTotalCount()  
     
 
 class MahjongMainFrame(wx.Frame):
@@ -802,6 +964,7 @@ class MahjongMainFrame(wx.Frame):
         self.canvas.SetSize(self.GetClientSize())
         
         self.mahjong_total_count = 0
+        self.mahjong_player_count = 0
         
         self.btn_setting = wx.Button(self.canvas, label=u"设置", size = (40, -1))
         
@@ -824,21 +987,20 @@ class MahjongMainFrame(wx.Frame):
         
     def OnMaxSize(self, evt): 
         
-        print("max")
         self.canvas.SetSize(self.GetClientSize())
         self.canvas.Refresh()
         
     def OnMinSize(self, evt): 
         
-        print("min")
         self.canvas.SetSize(self.GetClientSize())
         self.canvas.Refresh()
         
         
     def OnBtnSetting(self, evt):
         
-        self.setting_dlg = MahjongSettingDlg(self)
-        self.setting_dlg.ShowModal()
+        setting_dlg = MahjongSettingDlg(self)
+        setting_dlg.ShowModal()
+        setting_dlg.Destroy()
         
 
 class MahjongApp(wx.App):  
