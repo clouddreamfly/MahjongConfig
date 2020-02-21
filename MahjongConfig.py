@@ -336,7 +336,7 @@ class DragMahjong(DragShape):
         
         DragShape.__init__(self)
         
-        self.fullscreen = True
+        self.fullscreen = False
         self.mahjong_data = 0
         self.mahjong_type = mahjong_type
         self.SetMahjongData(mahjong_data)
@@ -407,7 +407,7 @@ class HeapMahjong(DragMahjong):
         mahjong_img = mahjong_img.ConvertToImage().Scale(mahjong_bg.GetWidth() - 8, mahjong_bg.GetHeight() - 20)
         mahjong_img = mahjong_img.ConvertToBitmap()        
         mem_dc.DrawBitmap(mahjong_bg, 0, 0, True)
-        mem_dc.DrawBitmap(mahjong_img, (mahjong_bg.GetWidth()-mahjong_img.GetWidth()) / 2, 0, True)             
+        mem_dc.DrawBitmap(mahjong_img, (mahjong_bg.GetWidth()-mahjong_img.GetWidth()) / 2, (mahjong_bg.GetHeight() - mahjong_img.GetHeight()) / 2 - 9, True)             
         self.SetBitmap(mahjong_bmp)        
     
          
@@ -450,7 +450,7 @@ class LeftMahjong(DragMahjong):
         mem_dc = wx.MemoryDC()
         mem_dc.SelectObject(mahjong_bmp)  
         mem_dc.DrawBitmap(mahjong_bg, 0, 0, True)
-        mem_dc.DrawBitmap(mahjong_img, (mahjong_bg.GetWidth()-mahjong_img.GetWidth()) / 2, 6, True)  
+        mem_dc.DrawBitmap(mahjong_img, (mahjong_bg.GetWidth()-mahjong_img.GetWidth()) / 2, (mahjong_bg.GetHeight() - mahjong_img.GetHeight()) / 2 - 10, True)  
         self.SetBitmap(mahjong_bmp)
         
         
@@ -496,7 +496,7 @@ class TopMahjong(DragMahjong):
         mahjong_img = mahjong_img.ConvertToImage().Scale(mahjong_bg.GetWidth() - 8, mahjong_bg.GetHeight() - 20)
         mahjong_img = mahjong_img.ConvertToBitmap()        
         mem_dc.DrawBitmap(mahjong_bg, 0, 0, True)
-        mem_dc.DrawBitmap(mahjong_img, (mahjong_bg.GetWidth()-mahjong_img.GetWidth()) / 2, 0, True)             
+        mem_dc.DrawBitmap(mahjong_img, (mahjong_bg.GetWidth()-mahjong_img.GetWidth()) / 2, (mahjong_bg.GetHeight() - mahjong_img.GetHeight()) / 2 - 9, True)             
         self.SetBitmap(mahjong_bmp)
         
          
@@ -539,7 +539,7 @@ class RightMahjong(DragMahjong):
         mem_dc = wx.MemoryDC()
         mem_dc.SelectObject(mahjong_bmp)  
         mem_dc.DrawBitmap(mahjong_bg, 0, 0, True)
-        mem_dc.DrawBitmap(mahjong_img, (mahjong_bg.GetWidth()-mahjong_img.GetWidth()) / 2, 6, True)   
+        mem_dc.DrawBitmap(mahjong_img, (mahjong_bg.GetWidth()-mahjong_img.GetWidth()) / 2, (mahjong_bg.GetHeight() - mahjong_img.GetHeight()) / 2 - 10, True)   
         self.SetBitmap(mahjong_bmp)
         
       
@@ -581,8 +581,8 @@ class BottomMahjong(DragMahjong):
         mahjong_bmp = wx.EmptyBitmapRGBA(mahjong_bg.GetWidth(), mahjong_bg.GetHeight())
         mem_dc = wx.MemoryDC()
         mem_dc.SelectObject(mahjong_bmp)         
-        mem_dc.DrawBitmap(mahjong_bg, 0, 0, True)
-        mem_dc.DrawBitmap(mahjong_img, (mahjong_bg.GetWidth()-mahjong_img.GetWidth()) / 2, 28, True)     
+        mem_dc.DrawBitmap(mahjong_bg, 0, 0, True)      
+        mem_dc.DrawBitmap(mahjong_img, (mahjong_bg.GetWidth()-mahjong_img.GetWidth()) / 2, (mahjong_bg.GetHeight() - mahjong_img.GetHeight()) / 2 + 10, True)
         
         mahjong_bmp = mahjong_bmp.ConvertToImage().Scale(mahjong_bmp.GetWidth() - 18, mahjong_bmp.GetHeight() - 30)
         mahjong_bmp = mahjong_bmp.ConvertToBitmap()  
@@ -762,8 +762,15 @@ class HandMahjong:
         
         mahjong_count =  len(mahjong_datas)
         if mahjong_count > 0:
+            reverse_mahjong_datas = []
+            if self.seat_direction == SeatDirection_Top or self.seat_direction ==  SeatDirection_Right:
+                for mahjong_data in reversed(mahjong_datas):
+                    reverse_mahjong_datas.append(mahjong_data)
+                
             for index in range(mahjong_count):
                 mahjong_data = mahjong_datas[index]
+                if len(reverse_mahjong_datas) > 0:
+                    mahjong_data = reverse_mahjong_datas[index]
                 if index < len(self.mahjong_views):
                     self.mahjong_views[index].SetMahjongData(mahjong_data)
                 else:
@@ -801,6 +808,9 @@ class HandMahjong:
         for mahjong_view in self.mahjong_views:
             data = mahjong_view.GetMahjongData()
             mahjong_datas.append(data)
+        
+        if self.seat_direction == SeatDirection_Top or self.seat_direction ==  SeatDirection_Right:
+            mahjong_datas.reverse()
             
         return mahjong_datas
     
@@ -818,9 +828,15 @@ class HandMahjong:
         if self.seat_direction == SeatDirection_Left:
             self.InitLeftMahjongView(mahjong_datas)
         elif self.seat_direction == SeatDirection_Top:
-            self.InitTopMahjongView(mahjong_datas)
+            reverse_mahjong_datas = []
+            for mahjong_data in reversed(mahjong_datas):
+                reverse_mahjong_datas.append(mahjong_data)          
+            self.InitTopMahjongView(reverse_mahjong_datas)
         elif self.seat_direction == SeatDirection_Right:
-            self.InitRightMahjongView(mahjong_datas)
+            reverse_mahjong_datas = []
+            for mahjong_data in reversed(mahjong_datas):
+                reverse_mahjong_datas.append(mahjong_data)
+            self.InitRightMahjongView(reverse_mahjong_datas)
         else:
             self.InitBottomMahjongView(mahjong_datas)
             
@@ -980,9 +996,8 @@ class DragCanvas(wx.ScrolledWindow):
         
         self.parent = parent
         self.shapes = []
-        self.dragImage = None
-        self.dragShape = None
-        self.hiliteShape = None  
+        self.drag_image = None
+        self.drag_shape = None 
 
         self.SetCursor(wx.StockCursor(wx.CURSOR_ARROW))
         self.SetBackgroundStyle(wx.BG_STYLE_ERASE)       
@@ -1232,9 +1247,9 @@ class DragCanvas(wx.ScrolledWindow):
     
     def FindShape(self, pt):
         
-        for shape in self.shapes:
-            if shape.HitTest(pt):
-                return shape
+        for shape in reversed(self.shapes):
+            if shape.HitTest(pt) and shape.shown == True:
+                return shape  
             
         return None    
         
@@ -1297,53 +1312,47 @@ class DragCanvas(wx.ScrolledWindow):
 
         shape = self.FindShape(evt.GetPosition())
         if shape:
-            self.dragShape = shape
+            self.drag_shape = shape
             self.dragStartPos = evt.GetPosition()
 
     # Left mouse button up.
     def OnLeftUp(self, evt):
         
-        if not self.dragImage or not self.dragShape:
-            self.dragImage = None
-            self.dragShape = None
+        if not self.drag_image or not self.drag_shape:
+            self.drag_image = None
+            self.drag_shape = None
             return
 
         # Hide the image, end dragging, and nuke out the drag image.
-        self.dragImage.Hide()
-        self.dragImage.EndDrag()
-        self.dragImage = None
-
-        if self.hiliteShape:
-            self.RefreshRect(self.hiliteShape.GetRect())
-            self.hiliteShape = None
-            
+        self.drag_image.Hide()
+        self.drag_image.EndDrag()
+        self.drag_image = None
 
         shape = self.FindShape(evt.GetPosition())
         if shape:        
             mahjong_data1 = shape.GetMahjongData()
-            mahjong_data2 = self.dragShape.GetMahjongData()
+            mahjong_data2 = self.drag_shape.GetMahjongData()
             shape.SetMahjongData(mahjong_data2)
-            self.dragShape.SetMahjongData(mahjong_data1)
+            self.drag_shape.SetMahjongData(mahjong_data1)
     
-            self.dragShape.shown = True      
+            self.drag_shape.shown = True      
             self.RefreshRect(shape.GetRect())
-            self.RefreshRect(self.dragShape.GetRect())
-            self.Refresh()
-            self.dragShape = None            
+            self.RefreshRect(self.drag_shape.GetRect())
+            self.drag_shape = None            
         else:
-            self.dragShape.shown = True
-            self.RefreshRect(self.dragShape.GetRect())
-            self.dragShape = None
+            self.drag_shape.shown = True
+            self.RefreshRect(self.drag_shape.GetRect())
+            self.drag_shape = None
 
 
     # The mouse is moving
     def OnMotion(self, evt):
         # Ignore mouse movement if we're not dragging.
-        if not self.dragShape or not evt.Dragging() or not evt.LeftIsDown():
+        if not self.drag_shape or not evt.Dragging() or not evt.LeftIsDown():
             return
 
         # if we have a shape, but haven't started dragging yet
-        if self.dragShape and not self.dragImage:
+        if self.drag_shape and not self.drag_image:
 
             # only start the drag after having moved a couple pixels
             tolerance = 2
@@ -1355,51 +1364,21 @@ class DragCanvas(wx.ScrolledWindow):
 
             # refresh the area of the window where the shape was so it
             # will get erased.
-            self.dragShape.shown = False
-            self.RefreshRect(self.dragShape.GetRect(), True)
+            self.drag_shape.shown = False
+            self.RefreshRect(self.drag_shape.GetRect(), True)
             self.Update()
 
-            self.dragImage = wx.DragImage(self.dragShape.bmp, wx.StockCursor(wx.CURSOR_HAND))
-            hotspot = self.dragStartPos - self.dragShape.pos
-            self.dragImage.BeginDrag(hotspot, self, self.dragShape.fullscreen)
-
-            self.dragImage.Move(pt)
-            self.dragImage.Show()
-
-
-        # if we have shape and image then move it, posibly highlighting another shape.
-        elif self.dragShape and self.dragImage:
-            onShape = self.FindShape(evt.GetPosition())
-            unhiliteOld = False
-            hiliteNew = False
-
-            # figure out what to hilite and what to unhilite
-            if self.hiliteShape:
-                if onShape is None or self.hiliteShape is not onShape:
-                    unhiliteOld = True
-
-            if onShape and onShape is not self.hiliteShape and onShape.shown:
-                hiliteNew = True
-
-            # if needed, hide the drag image so we can update the window
-            if unhiliteOld or hiliteNew:
-                self.dragImage.Hide()
-
-            if unhiliteOld:
-                dc = wx.ClientDC(self)
-                self.hiliteShape.Draw(dc)
-                self.hiliteShape = None
-
-            if hiliteNew:
-                dc = wx.ClientDC(self)
-                self.hiliteShape = onShape
-                self.hiliteShape.Draw(dc, wx.INVERT)
-
-            # now move it and show it again if needed
-            self.dragImage.Move(evt.GetPosition())
-            if unhiliteOld or hiliteNew:
-                self.dragImage.Show()
-
+            self.drag_image = wx.DragImage(self.drag_shape.bmp, wx.StockCursor(wx.CURSOR_HAND))
+            hotspot = self.dragStartPos - self.drag_shape.pos
+            self.drag_image.BeginDrag(hotspot, self, self.drag_shape.fullscreen)
+            self.drag_image.Show()
+            self.drag_image.Move(pt)
+    
+        elif self.drag_shape and self.drag_image:
+            
+            # move drag image to position
+            self.drag_image.Move(evt.GetPosition())
+            
     
     
 class MahjongSettingDlg(wx.Dialog):
