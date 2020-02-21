@@ -4,10 +4,9 @@
 import os
 import time
 import random
-import wx
 import json
 import ConfigParser
-
+import wx
 
 
 
@@ -39,7 +38,7 @@ class BaseConfig:
         try:
             config.readfp(open(path,'r'))
         except:
-            print "read error!"
+            print(path, "read error!")
             return False
         
         self.Reset()
@@ -121,7 +120,7 @@ class BaseConfig:
         try:
             config.write(open(path, 'w'))
         except:
-            print "wirte error!"
+            print("wirte error!")
             return False
         
         return True
@@ -138,7 +137,7 @@ class MahjongConfig(BaseConfig):
         try:
             fp = open(path, 'r')
         except:
-            print("open json file error!")
+            print(path, "open json file error!")
             return False
         
         self.Reset()
@@ -182,11 +181,11 @@ class MahjongConfig(BaseConfig):
                         if len(mahjong_data) > 0:                       
                             self.heap_mahjong_datas.append(int(mahjong_data, 16))   
                         
-                if config["MahjongDatas"].has_key("player_mahjong_datas") and len(config["MahjongDatas"]["heap_mahjong_datas"]) > 0:
+                if config["MahjongDatas"].has_key("player_mahjong_datas") and len(config["MahjongDatas"]["player_mahjong_datas"]) > 0:
                     if self.mahjong_player_count > 0:
                         for seat_id in range(self.mahjong_player_count):
-                            if seat_id < len(config["MahjongDatas"]["heap_mahjong_datas"]):     
-                                mahjong_datas = config["MahjongDatas"]["heap_mahjong_datas"][seat_id]
+                            if seat_id < len(config["MahjongDatas"]["player_mahjong_datas"]):     
+                                mahjong_datas = config["MahjongDatas"]["player_mahjong_datas"][seat_id]
                                 mahjong_datas = mahjong_datas.split(",")
                             
                                 player_mahjong_datas = []
@@ -285,28 +284,32 @@ class DragShape:
         
         return self.GetRect().GetHeight()
     
-
-    def HitTest(self, pt):
+    def GetSize(self):
         
-        rect = self.GetRect()
-        return rect.InsideXY(pt.x, pt.y)
-
+        return self.GetRect().GetSize()
+        
     def GetRect(self):
         
         if self.bmp == None:
             return wx.Rect(self.pos.x, self.pos.y, 1, 1)
         
         return wx.Rect(self.pos.x, self.pos.y, self.bmp.GetWidth(), self.bmp.GetHeight())
+    
+    def HitTest(self, pt):
+        
+        rect = self.GetRect()
+        return rect.InsideXY(pt.x, pt.y)
+    
 
     def Draw(self, dc, op = wx.COPY):
         
         if self.bmp != None and self.bmp.Ok():
-            memDC = wx.MemoryDC()
-            memDC.SelectObject(self.bmp)
-
-            dc.Blit(self.pos.x, self.pos.y,
-                    self.bmp.GetWidth(), self.bmp.GetHeight(),
-                    memDC, 0, 0, op, True)
+            if False:
+                dc.DrawBitmap(self.bmp, self.pos.x, self.pos.y, True)
+            else:
+                mem_dc = wx.MemoryDC()
+                mem_dc.SelectObject(self.bmp)
+                dc.Blit(self.pos.x, self.pos.y, self.bmp.GetWidth(), self.bmp.GetHeight(), mem_dc, 0, 0, op, True)
 
             return True
         else:
@@ -398,13 +401,13 @@ class HeapMahjong(DragMahjong):
         mahjong_bg = wx.Bitmap('images/mj_bg/mj_small_bg_t.png') 
         
         mahjong_bmp = wx.EmptyBitmapRGBA(mahjong_bg.GetWidth(), mahjong_bg.GetHeight())
-        memDC = wx.MemoryDC()
-        memDC.SelectObject(mahjong_bmp)  
+        mem_dc = wx.MemoryDC()
+        mem_dc.SelectObject(mahjong_bmp)  
         
         mahjong_img = mahjong_img.ConvertToImage().Scale(mahjong_bg.GetWidth() - 8, mahjong_bg.GetHeight() - 20)
         mahjong_img = mahjong_img.ConvertToBitmap()        
-        memDC.DrawBitmap(mahjong_bg, 0, 0, True)
-        memDC.DrawBitmap(mahjong_img, (mahjong_bg.GetWidth()-mahjong_img.GetWidth()) / 2, 0, True)             
+        mem_dc.DrawBitmap(mahjong_bg, 0, 0, True)
+        mem_dc.DrawBitmap(mahjong_img, (mahjong_bg.GetWidth()-mahjong_img.GetWidth()) / 2, 0, True)             
         self.SetBitmap(mahjong_bmp)        
     
          
@@ -444,10 +447,10 @@ class LeftMahjong(DragMahjong):
         mahjong_bg = wx.Bitmap('images/mj_bg/mj_small_bg_l.png')
         
         mahjong_bmp = wx.EmptyBitmapRGBA(mahjong_bg.GetWidth(), mahjong_bg.GetHeight())
-        memDC = wx.MemoryDC()
-        memDC.SelectObject(mahjong_bmp)  
-        memDC.DrawBitmap(mahjong_bg, 0, 0, True)
-        memDC.DrawBitmap(mahjong_img, (mahjong_bg.GetWidth()-mahjong_img.GetWidth()) / 2, 6, True)  
+        mem_dc = wx.MemoryDC()
+        mem_dc.SelectObject(mahjong_bmp)  
+        mem_dc.DrawBitmap(mahjong_bg, 0, 0, True)
+        mem_dc.DrawBitmap(mahjong_img, (mahjong_bg.GetWidth()-mahjong_img.GetWidth()) / 2, 6, True)  
         self.SetBitmap(mahjong_bmp)
         
         
@@ -487,13 +490,13 @@ class TopMahjong(DragMahjong):
         mahjong_bg = wx.Bitmap('images/mj_bg/mj_small_bg_t.png')
         
         mahjong_bmp = wx.EmptyBitmapRGBA(mahjong_bg.GetWidth(), mahjong_bg.GetHeight())
-        memDC = wx.MemoryDC()
-        memDC.SelectObject(mahjong_bmp)  
+        mem_dc = wx.MemoryDC()
+        mem_dc.SelectObject(mahjong_bmp)  
         
         mahjong_img = mahjong_img.ConvertToImage().Scale(mahjong_bg.GetWidth() - 8, mahjong_bg.GetHeight() - 20)
         mahjong_img = mahjong_img.ConvertToBitmap()        
-        memDC.DrawBitmap(mahjong_bg, 0, 0, True)
-        memDC.DrawBitmap(mahjong_img, (mahjong_bg.GetWidth()-mahjong_img.GetWidth()) / 2, 0, True)             
+        mem_dc.DrawBitmap(mahjong_bg, 0, 0, True)
+        mem_dc.DrawBitmap(mahjong_img, (mahjong_bg.GetWidth()-mahjong_img.GetWidth()) / 2, 0, True)             
         self.SetBitmap(mahjong_bmp)
         
          
@@ -533,10 +536,10 @@ class RightMahjong(DragMahjong):
         mahjong_bg = wx.Bitmap('images/mj_bg/mj_small_bg_r.png')
         
         mahjong_bmp = wx.EmptyBitmapRGBA(mahjong_bg.GetWidth(), mahjong_bg.GetHeight())
-        memDC = wx.MemoryDC()
-        memDC.SelectObject(mahjong_bmp)  
-        memDC.DrawBitmap(mahjong_bg, 0, 0, True)
-        memDC.DrawBitmap(mahjong_img, (mahjong_bg.GetWidth()-mahjong_img.GetWidth()) / 2, 6, True)   
+        mem_dc = wx.MemoryDC()
+        mem_dc.SelectObject(mahjong_bmp)  
+        mem_dc.DrawBitmap(mahjong_bg, 0, 0, True)
+        mem_dc.DrawBitmap(mahjong_img, (mahjong_bg.GetWidth()-mahjong_img.GetWidth()) / 2, 6, True)   
         self.SetBitmap(mahjong_bmp)
         
       
@@ -576,10 +579,10 @@ class BottomMahjong(DragMahjong):
         mahjong_bg = wx.Bitmap('images/mj_bg/mj_hand_bg.png')
         
         mahjong_bmp = wx.EmptyBitmapRGBA(mahjong_bg.GetWidth(), mahjong_bg.GetHeight())
-        memDC = wx.MemoryDC()
-        memDC.SelectObject(mahjong_bmp)         
-        memDC.DrawBitmap(mahjong_bg, 0, 0, True)
-        memDC.DrawBitmap(mahjong_img, (mahjong_bg.GetWidth()-mahjong_img.GetWidth()) / 2, 28, True)     
+        mem_dc = wx.MemoryDC()
+        mem_dc.SelectObject(mahjong_bmp)         
+        mem_dc.DrawBitmap(mahjong_bg, 0, 0, True)
+        mem_dc.DrawBitmap(mahjong_img, (mahjong_bg.GetWidth()-mahjong_img.GetWidth()) / 2, 28, True)     
         
         mahjong_bmp = mahjong_bmp.ConvertToImage().Scale(mahjong_bmp.GetWidth() - 18, mahjong_bmp.GetHeight() - 30)
         mahjong_bmp = mahjong_bmp.ConvertToBitmap()  
@@ -598,6 +601,7 @@ class PlaneHeapMahjong:
     def __init__(self, parent, mahjong_datas = []):
         
         self.parent = parent
+        self.shown = True
         self.layout_mode = wx.ALIGN_INVALID
         self.view_rect = wx.Rect()     
         self.display_col_count = 16
@@ -606,19 +610,29 @@ class PlaneHeapMahjong:
         self.InitMahjongView(mahjong_datas)
     
     
-    def SetHandMahjongs(self, mahjong_datas):
+    def SetHeapMahjongs(self, mahjong_datas):
 
-        if len(mahjong_datas) == len(self.mahjong_views):
-
-            for index in len(mahjong_datas):
+        mahjong_count =  len(mahjong_datas)
+        if mahjong_count > 0:
+            for index in range(mahjong_count):
                 mahjong_data = mahjong_datas[index]
-                self.mahjong_views[index].SetMahjongData(mahjong_data) 
+                if index < len(self.mahjong_views):
+                    self.mahjong_views[index].SetMahjongData(mahjong_data)
+                else:
+                    mahjong_view = HeapMahjong(mahjong_data)
+                    self.mahjong_views.append(mahjong_view) 
+                    self.parent.AddShape(mahjong_view)
+                    
+        if len(self.mahjong_views) > mahjong_count:
+            for index in range(mahjong_count, len(self.mahjong_views)):
+                self.parent.RemoveShape(self.mahjong_views[index])
+            del self.mahjong_views[mahjong_count:]
+            
 
-            return True
+        return True
 
-        return False
 
-    def SetHandMahJong(self, index, mahjong_data):
+    def SetHeapMahJong(self, index, mahjong_data):
 
         if index < len(self.mahjong_views):
             self.mahjong_views[index].SetMahjongData(mahjong_data) 
@@ -626,7 +640,7 @@ class PlaneHeapMahjong:
 
         return False
 
-    def GetHandMahjongs(self):
+    def GetHeapMahjongs(self):
 
         mahjong_datas = []
         for mahjong_view in self.mahjong_views:
@@ -636,7 +650,7 @@ class PlaneHeapMahjong:
         return mahjong_datas
 
 
-    def GetHandMahjong(self, index):
+    def GetHeapMahjong(self, index):
 
         mahjong_data = 0
         if index < len(self.mahjong_views):
@@ -649,11 +663,27 @@ class PlaneHeapMahjong:
         for mahjong_data in mahjong_datas:
             mahjong_view = HeapMahjong(mahjong_data)
             self.mahjong_views.append(mahjong_view) 
-            self.parent.shapes.append(mahjong_view)  
+            self.parent.AddShape(mahjong_view)  
 
         self.UpdateView()
         
-            
+
+    def IsShow(self):
+        
+        return self.shown
+    
+    def IsHide(self):
+        
+        return not self.shown
+    
+    def SetShow(self):
+        
+        self.shown = True
+        
+    def SetHide(self):
+        
+        self.shown =  False
+    
     def SetPosition(self, pt, mode = None):
         
         self.view_rect.SetPosition(pt)
@@ -665,43 +695,93 @@ class PlaneHeapMahjong:
 
         x = self.view_rect.GetX()
         y = self.view_rect.GetY()
+        if self.layout_mode &  wx.ALIGN_CENTER:
+            x -= self.view_rect.GetWidth() / 2
+            y -= self.view_rect.GetHeight() / 2
+        else:
+            if self.layout_mode &  wx.ALIGN_CENTER_HORIZONTAL:
+                x -= self.view_rect.GetWidth() / 2
+            if self.layout_mode &  wx.ALIGN_CENTER_VERTICAL:
+                y -= self.view_rect.GetHeight() / 2
+                
         h_space = -5
         v_space = -20
         x_count = 0
         y_count = 0
+        view_rect =  wx.Rect()
         for mahjong_view in self.mahjong_views:
             mahjong_view.SetPos(wx.Point(x + x_count * (mahjong_view.GetWidth() + h_space), y + y_count * (mahjong_view.GetHeight() + v_space)))
-            self.view_rect = self.view_rect.Union(mahjong_view.GetRect())
+            view_rect.Union(mahjong_view.GetRect())
             x_count += 1
             if x_count >= self.display_col_count:
                 x_count = 0
                 y_count += 1
 
-
+        self.view_rect =  view_rect
+        self.parent.RefreshRect(self.view_rect)
+        
+    def Draw(self, dc, op = wx.COPY):
+        
+        pass        
+        
             
-   
+
+INVALID_SEAT_ID = 0xFFFF
+NORMAL_MAHJONG_COUNT = 13
+
 # 手上麻将
 class HandMahjong:
     
-    def __init__(self, parent, seat_id, seat_direction, mahjong_datas = []):
+    def __init__(self, parent, seat_direction, seat_id = INVALID_SEAT_ID, mahjong_datas = []):
         
         self.parent = parent
+        self.shown = True
         self.seat_id = seat_id
-        self.seat_direction = seat_direction 
+        self.seat_direction = seat_direction
+        self.partition_h = 14
+        self.partition_v = 20
         self.layout_mode = wx.ALIGN_INVALID
         self.view_rect = wx.Rect()
         self.mahjong_views = []
              
         self.InitMahjongView(mahjong_datas)
             
+    def GetSeatDirection(self):
+        
+        return self.seat_direction
+    
+    def GetSeatID(self):
+        
+        return self.seat_id
+    
+    def SetSeatID(self,  seat_id):
+        
+        self.seat_id =  seat_id
     
     def SetHandMahjongs(self, mahjong_datas):
         
-        if len(mahjong_datas) == len(self.mahjong_views):
-            
-            for index in len(mahjong_datas):
+        mahjong_count =  len(mahjong_datas)
+        if mahjong_count > 0:
+            for index in range(mahjong_count):
                 mahjong_data = mahjong_datas[index]
-                self.mahjong_views[index].SetMahjongData(mahjong_data) 
+                if index < len(self.mahjong_views):
+                    self.mahjong_views[index].SetMahjongData(mahjong_data)
+                else:
+                    if self.seat_direction == SeatDirection_Left:
+                        mahjong_view = LeftMahjong(mahjong_data)
+                    elif self.seat_direction == SeatDirection_Top:
+                        mahjong_view = TopMahjong(mahjong_data)
+                    elif self.seat_direction == SeatDirection_Right:
+                        mahjong_view = RightMahjong(mahjong_data)
+                    else:
+                        mahjong_view = BottomMahjong(mahjong_data)                        
+                    self.mahjong_views.append(mahjong_view) 
+                    self.parent.AddShape(mahjong_view)
+                    
+        if len(self.mahjong_views) > mahjong_count:
+            for index in range(mahjong_count, len(self.mahjong_views)):
+                self.parent.RemoveShape(self.mahjong_views[index])            
+            del self.mahjong_views[mahjong_count:]
             
             return True
         
@@ -752,7 +832,7 @@ class HandMahjong:
         for mahjong_data in mahjong_datas:
             mahjong_view = LeftMahjong(mahjong_data)
             self.mahjong_views.append(mahjong_view) 
-            self.parent.shapes.append(mahjong_view)  
+            self.parent.AddShape(mahjong_view)  
             
         
     def InitTopMahjongView(self, mahjong_datas):                    
@@ -760,7 +840,7 @@ class HandMahjong:
         for mahjong_data in mahjong_datas:
             mahjong_view = TopMahjong(mahjong_data)
             self.mahjong_views.append(mahjong_view) 
-            self.parent.shapes.append(mahjong_view)  
+            self.parent.AddShape(mahjong_view)  
                 
                 
     def InitRightMahjongView(self, mahjong_datas):
@@ -768,7 +848,7 @@ class HandMahjong:
         for mahjong_data in mahjong_datas:
             mahjong_view = RightMahjong(mahjong_data)
             self.mahjong_views.append(mahjong_view) 
-            self.parent.shapes.append(mahjong_view)  
+            self.parent.AddShape(mahjong_view)  
         
                 
     def InitBottomMahjongView(self, mahjong_datas):
@@ -776,14 +856,33 @@ class HandMahjong:
         for mahjong_data in mahjong_datas:
             mahjong_view = BottomMahjong(mahjong_data)
             self.mahjong_views.append(mahjong_view) 
-            self.parent.shapes.append(mahjong_view)      
+            self.parent.AddShape(mahjong_view)      
      
+    def IsShow(self):
+        
+        return self.shown
+    
+    def IsHide(self):
+        
+        return not self.shown
+    
+    def SetShow(self):
+        
+        self.shown = True
+        
+    def SetHide(self):
+        
+        self.shown =  False     
             
     def SetPosition(self, pt, mode = None):
         
         self.view_rect.SetPosition(pt)
         self.layout_mode = mode or self.layout_mode
         self.UpdateView()
+        
+    def GetRect(self):
+        
+        return self.view_rect
                 
     def UpdateView(self):
        
@@ -800,52 +899,77 @@ class HandMahjong:
         
         
     def UpdateLeftMahjongView(self):
-        
+
         x = self.view_rect.GetX()
         y = self.view_rect.GetY()
+        if self.layout_mode &  wx.ALIGN_CENTER_VERTICAL:
+            y -= self.view_rect.GetHeight() / 2 
         v_space = -20
         count = 0
+        view_rect =  wx.Rect()
         for mahjong_view in self.mahjong_views:
-            mahjong_view.SetPos(wx.Point(x, y + count * (mahjong_view.GetHeight() + v_space)))
-            self.view_rect = self.view_rect.Union(mahjong_view.GetRect())
+            mahjong_view.SetPos(wx.Point(x, y + count * (mahjong_view.GetHeight() + v_space) + (0 if count + 1 <= NORMAL_MAHJONG_COUNT else self.partition_v)))
+            view_rect.Union(mahjong_view.GetRect())
             count += 1
             
+        self.view_rect =  view_rect
+    
         
     def UpdateTopMahjongView(self):                    
             
         x = self.view_rect.GetX()
         y = self.view_rect.GetY()
+        if self.layout_mode &  wx.ALIGN_CENTER_HORIZONTAL:
+            x -= self.view_rect.GetWidth() / 2          
         h_space = -5  
         count = 0
+        view_rect =  wx.Rect()
+        mahjong_count = len(self.mahjong_views)
         for mahjong_view in self.mahjong_views:
-            mahjong_view.SetPos(wx.Point(x + count * (mahjong_view.GetWidth() + h_space), y))
-            self.view_rect = self.view_rect.Union(mahjong_view.GetRect())
+            mahjong_view.SetPos(wx.Point(x + count * (mahjong_view.GetWidth() + h_space) + (0 if not (count > 0 and mahjong_count > NORMAL_MAHJONG_COUNT) else self.partition_h), y))
+            view_rect.Union(mahjong_view.GetRect())
             count += 1
                 
+        self.view_rect =  view_rect
                 
     def UpdateRightMahjongView(self):
      
         x = self.view_rect.GetX()
         y = self.view_rect.GetY()
+        if self.layout_mode &  wx.ALIGN_CENTER_VERTICAL:
+            y -= self.view_rect.GetHeight() / 2        
         v_space = -20
         count = 0
+        view_rect =  wx.Rect()
+        mahjong_count = len(self.mahjong_views)
         for mahjong_view in self.mahjong_views:
-            mahjong_view.SetPos(wx.Point(x, y + count * (mahjong_view.GetHeight() + v_space)))
-            self.view_rect = self.view_rect.Union(mahjong_view.GetRect())
+            mahjong_view.SetPos(wx.Point(x, y + count * (mahjong_view.GetHeight() + v_space) + (0 if not (count > 0 and mahjong_count > NORMAL_MAHJONG_COUNT) else self.partition_v)))
+            view_rect.Union(mahjong_view.GetRect())
             count += 1
         
+        self.view_rect =  view_rect
                 
     def UpdateBottomMahjongView(self):   
         
         x = self.view_rect.GetX()
         y = self.view_rect.GetY()
+        if self.layout_mode &  wx.ALIGN_CENTER_HORIZONTAL:
+            x -= self.view_rect.GetWidth() / 2          
         h_space = 0  
         count = 0
+        view_rect =  wx.Rect()
         for mahjong_view in self.mahjong_views:
-            mahjong_view.SetPos(wx.Point(x + count * (mahjong_view.GetWidth() + h_space), y))
-            self.view_rect = self.view_rect.Union(mahjong_view.GetRect())
+            mahjong_view.SetPos(wx.Point(x + count * (mahjong_view.GetWidth() + h_space) + (0 if count + 1 <= NORMAL_MAHJONG_COUNT else self.partition_h), y))
+            view_rect.Union(mahjong_view.GetRect())
             count += 1      
 
+        self.view_rect =  view_rect
+        
+        
+    def Draw(self, dc, op = wx.COPY):
+        
+        pass
+        
 #----------------------------------------------------------------------
 
 class DragCanvas(wx.ScrolledWindow):
@@ -864,12 +988,24 @@ class DragCanvas(wx.ScrolledWindow):
         self.SetBackgroundStyle(wx.BG_STYLE_ERASE)       
         #self.SetBackgroundColour(wx.Colour(255,255,255))
         
-        self.bg_bmp = wx.Bitmap('images/mj_bg/sc_room_bg.jpg')
-        self.bg_bmp2 = None
+        self.bmp_bg = None
+        self.bmp_bg1 = None
+        self.bg_image = wx.Image('images/mj_bg/sc_room_bg.jpg')
+        self.bg_image1 = wx.Bitmap('images/mj_bg/mj_timer_bg.png')
+        self.bg_image1_1 = wx.Bitmap('images/mj_bg/mj_timer_yellow.png')
+        self.bg_image1_2 = wx.Bitmap('images/mj_bg/mj_timer_blue.png')
+        self.bg_image1_3 = wx.Bitmap('images/mj_bg/mj_timer_green.png')
+        self.bg_image1_4 = wx.Bitmap('images/mj_bg/mj_timer_red.png')
+        self.bg_image1_1_1 = wx.Bitmap('images/mj_bg/mj_lab_dong.png')
+        self.bg_image1_2_1 = wx.Bitmap('images/mj_bg/mj_lab_nan.png')
+        self.bg_image1_3_1 = wx.Bitmap('images/mj_bg/mj_lab_xi.png')
+        self.bg_image1_4_1 = wx.Bitmap('images/mj_bg/mj_lab_bei.png')
+        self.AdjustBackground()
 
         # Make a shape from an image and mask.  This one will demo
         # dragging outside the window
-        self.InitMahjong()
+        self.InitMahjongView()
+        self.UpdateMahjongView()
         
         # add event
         self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
@@ -881,72 +1017,232 @@ class DragCanvas(wx.ScrolledWindow):
         self.Bind(wx.EVT_SIZE, self.OnSize)
         
         
-    def InitMahjong(self):
+    def InitMahjongView(self):
         
         config = self.parent.config
 
         self.plane_heap_mahjong = PlaneHeapMahjong(self, config.heap_mahjong_datas)
         self.hand_mahjong_ctrls = []
-        if config.mahjong_player_count > 0:
-            for seat_id in range(config.mahjong_player_count): 
-                player_mahjong_datas = []
-                if seat_id < len(config.player_mahjong_datas):   
-                    if seat_id == 0:
-                        seat_direction = SeatDirection_Top
-                        player_mahjong_datas = config.player_mahjong_datas[seat_id]
-                    elif seat_id == 1:
-                        seat_direction = SeatDirection_Left
-                        player_mahjong_datas = config.player_mahjong_datas[seat_id]                
-                    elif seat_id == 2:
-                        seat_direction = SeatDirection_Right
-                        player_mahjong_datas = config.player_mahjong_datas[seat_id]                
-                    elif seat_id == 3:
-                        seat_direction = SeatDirection_Bottom
-                        player_mahjong_datas = config.player_mahjong_datas[seat_id]
-                    else:
-                        continue
-                
-                hand_mahjong = HandMahjong(self, seat_id, seat_direction, player_mahjong_datas)
-                self.hand_mahjong_ctrls.append(hand_mahjong)
+                    
+        seat_directions =  [SeatDirection_Left, SeatDirection_Top,  SeatDirection_Right, SeatDirection_Bottom]
+        for seat_direction in seat_directions:
+            display = False
+            seat_id = INVALID_SEAT_ID
+            player_mahjong_datas = []
+            if config.mahjong_player_count == 1:
+                if seat_direction == SeatDirection_Bottom:
+                    display = True
+                    seat_id =  0
+            elif config.mahjong_player_count == 2:
+                if seat_direction == SeatDirection_Top:
+                    display = True
+                    seat_id = 0
+                elif seat_direction == SeatDirection_Bottom:
+                    display = True
+                    seat_id = 1                    
+            elif config.mahjong_player_count == 3:
+                if seat_direction == SeatDirection_Left:
+                    display = True
+                    seat_id = 0
+                elif seat_direction == SeatDirection_Right:
+                    display = True
+                    seat_id = 1                    
+                elif seat_direction == SeatDirection_Bottom:
+                    display = True
+                    seat_id = 2                    
+            elif config.mahjong_player_count == 4:
+                if seat_direction == SeatDirection_Left:
+                    display = True
+                    seat_id = 0
+                elif seat_direction == SeatDirection_Top:
+                    display = True
+                    seat_id = 1                    
+                elif seat_direction == SeatDirection_Right:
+                    display = True
+                    seat_id = 2                    
+                elif seat_direction == SeatDirection_Bottom:
+                    display = True
+                    seat_id = 3                  
+            else:
+                display =  False
 
+            if seat_id < len(config.player_mahjong_datas):   
+                player_mahjong_datas = config.player_mahjong_datas[seat_id]     
+            
+            mahjong_view = HandMahjong(self, seat_direction, seat_id, player_mahjong_datas)
+            if display ==  True:
+                mahjong_view.SetShow()
+            else:
+                mahjong_view.SetHide()
+            self.hand_mahjong_ctrls.append(mahjong_view)
+                
+                
+                
+    def ResetMahjongView(self):
+                
+        config = self.parent.config
     
-    def AdjustMahjongDatas(self, mahjong_datas):
+        self.plane_heap_mahjong.SetHeapMahjongs(config.heap_mahjong_datas)
+        self.plane_heap_mahjong.UpdateView()
+        
+        for mahjong_view in self.hand_mahjong_ctrls:
+            display = False
+            seat_id = INVALID_SEAT_ID
+            player_mahjong_datas = []
+            seat_direction = mahjong_view.seat_direction
+            if config.mahjong_player_count == 1:
+                if seat_direction == SeatDirection_Bottom:
+                    display = True
+                    seat_id =  0
+            elif config.mahjong_player_count == 2:
+                if seat_direction == SeatDirection_Top:
+                    display = True
+                    seat_id = 0
+                elif seat_direction == SeatDirection_Bottom:
+                    display = True
+                    seat_id = 1                    
+            elif config.mahjong_player_count == 3:
+                if seat_direction == SeatDirection_Left:
+                    display = True
+                    seat_id = 0
+                elif seat_direction == SeatDirection_Right:
+                    display = True
+                    seat_id = 1                    
+                elif seat_direction == SeatDirection_Bottom:
+                    display = True
+                    seat_id = 2                    
+            elif config.mahjong_player_count == 4:
+                if seat_direction == SeatDirection_Left:
+                    display = True
+                    seat_id = 0
+                elif seat_direction == SeatDirection_Top:
+                    display = True
+                    seat_id = 1                    
+                elif seat_direction == SeatDirection_Right:
+                    display = True
+                    seat_id = 2                    
+                elif seat_direction == SeatDirection_Bottom:
+                    display = True
+                    seat_id = 3                  
+            else:
+                display =  False
+                
+            if seat_id < len(config.player_mahjong_datas):   
+                player_mahjong_datas = config.player_mahjong_datas[seat_id]             
+                
+            mahjong_view.SetSeatID(seat_id)
+            mahjong_view.SetHandMahjongs(player_mahjong_datas)
+            if display == True:
+                mahjong_view.SetShow()
+            else:
+                mahjong_view.SetHide()
+            mahjong_view.UpdateView()
+                
+    def SaveMahjongViewToConfig(self):
         
         config = self.parent.config
         
-        if len(mahjong_datas) > 0:
-            random.shuffle(mahjong_datas)
+        if self.plane_heap_mahjong.IsShow():
+            config.heap_mahjong_datas = self.plane_heap_mahjong.GetHeapMahjongs()
+        else:
+            config.heap_mahjong_datas = []
         
-        config.heap_mahjong_datas = []
-        config.player_mahjong_datas = []
-        if config.mahjong_player_count > 0:
-            
-            for seat_id in range(config.mahjong_player_count):
-                mahjong_count = 13 if seat_id != config.mahjong_banker_seat_id else 14
-                if len(mahjong_datas) >= mahjong_count: 
-                    player_mahjong_datas = mahjong_datas[0 : mahjong_count]
-                    del mahjong_datas[0 : mahjong_count]
-                    config.player_mahjong_datas.append(player_mahjong_datas)
+        for mahjong_view in self.hand_mahjong_ctrls:
+            player_mahjong_datas = []
+            seat_id = mahjong_view.GetSeatID()
+            if mahjong_view.IsShow():
+                player_mahjong_datas =  mahjong_view.GetHandMahjongs()
                 
-        if len(mahjong_datas) > 0:
-            for mahjong_data in mahjong_datas:
-                config.heap_mahjong_datas.append(mahjong_data)
-                
+            if seat_id < config.mahjong_player_count:
+                config.player_mahjong_datas[seat_id] = player_mahjong_datas
+        
+        if config.mahjong_test_count <= 0:
+            config.mahjong_test_count = 1
     
     def UpdateMahjongView(self):
         
-        pass    
+        client_size = self.GetClientSize()
+        center_point_x = client_size.GetWidth() / 2
+        center_point_y = client_size.GetHeight() / 2 - 10
+        self.plane_heap_mahjong.SetPosition(wx.Point(center_point_x, center_point_y), wx.ALIGN_CENTER)   
+        
+        for mahjong_view in self.hand_mahjong_ctrls:
+            if mahjong_view.seat_direction == SeatDirection_Left:
+                mahjong_view.SetPosition(wx.Point(30, center_point_y), wx.ALIGN_CENTER_VERTICAL)
+            elif mahjong_view.seat_direction == SeatDirection_Top:
+                mahjong_view.SetPosition(wx.Point(center_point_x, 30), wx.ALIGN_CENTER_HORIZONTAL)
+            elif mahjong_view.seat_direction == SeatDirection_Right:
+                mahjong_view.SetPosition(wx.Point(client_size.GetWidth() - mahjong_view.GetRect().GetWidth() - 30, center_point_y), wx.ALIGN_CENTER_VERTICAL)
+            elif mahjong_view.seat_direction == SeatDirection_Bottom:
+                mahjong_view.SetPosition(wx.Point(center_point_x, client_size.GetHeight() - mahjong_view.GetRect().GetHeight() - 30), wx.ALIGN_CENTER_HORIZONTAL)
+        
+        self.Refresh()
+        
+        
+    def AdjustBackground(self):
+        
+        size = self.GetClientSize()
+        bg_size = self.bg_image.GetSize()
+        if size.width != 0 and size.height != 0 and size != bg_size:
+            image = self.bg_image.Scale(size.width, size.height)
+            self.bmp_bg = image.ConvertToBitmap() 
+            
+            image = wx.EmptyBitmapRGBA(self.bg_image1.GetWidth(), self.bg_image1.GetHeight())
+            mem_dc = wx.MemoryDC()
+            mem_dc.SelectObject(image)
+            mem_dc.DrawBitmap(self.bg_image1, 0, 0)
+            mem_dc.DrawBitmap(self.bg_image1_1, 10, 16)
+            mem_dc.DrawBitmap(self.bg_image1_2, 24, 10)
+            mem_dc.DrawBitmap(self.bg_image1_3, image.GetWidth()-self.bg_image1_3.GetWidth() - 10, 18)
+            mem_dc.DrawBitmap(self.bg_image1_4, image.GetWidth()-self.bg_image1_4.GetWidth() - 16, image.GetHeight()-self.bg_image1_4.GetHeight() - 9)
+            mem_dc.DrawBitmap(self.bg_image1_1_1, 12, 42)
+            mem_dc.DrawBitmap(self.bg_image1_2_1, (image.GetWidth()-self.bg_image1_2_1.GetWidth())/2, 14)
+            mem_dc.DrawBitmap(self.bg_image1_3_1, image.GetWidth()-self.bg_image1_3.GetWidth() - 11, 42)
+            mem_dc.DrawBitmap(self.bg_image1_4_1, (image.GetWidth()-self.bg_image1_4_1.GetWidth())/2, image.GetHeight()-self.bg_image1_4.GetHeight() - 10)                
+            self.bmp_bg1 = image  
+        
+        
+    def AddShape(self, shape):
+        
+        is_exist =  False
+        for _shape in self.shapes:
+            if _shape is shape:
+                is_exist =  True
+                break
+            
+        if is_exist == False:
+            self.shapes.append(shape)
     
+    def RemoveShape(self, shape):
+        
+        index =  0
+        for _shape in self.shapes:
+            if _shape is shape:
+                del self.shapes[index]
+                return True
+            
+            index += 1
+            
+        return False
+    
+        
+    def ClearShape(self):
+        
+        self.shapes =  []
+    
+    def FindShape(self, pt):
+        
+        for shape in self.shapes:
+            if shape.HitTest(pt):
+                return shape
+            
+        return None    
         
     # window size
     def OnSize(self, evt):
         
-        size = self.GetClientSize()
-        if size.width != 0 and size.height != 0 :
-            image = self.bg_bmp.ConvertToImage().Scale(size.width, size.height)
-            self.bg_bmp2 = image.ConvertToBitmap()
-         
-        self.Refresh()
+        self.AdjustBackground()         
+        self.UpdateMahjongView()
 
     # We're not doing anything here, but you might have reason to.
     # for example, if you were dragging something, you might elect to
@@ -957,17 +1253,18 @@ class DragCanvas(wx.ScrolledWindow):
 
     # tile the background bitmap
     def TileBackground(self, dc):
+        
         sz = self.GetClientSize()
-        w = self.bg_bmp.GetWidth()
-        h = self.bg_bmp.GetHeight()
         x = 0
+        y = 0
         
-        if self.bg_bmp2 == None:
-            image = self.bg_bmp.ConvertToImage().Scale(sz.width,sz.height)
-            self.bg_bmp2 = image.ConvertToBitmap()
-        
-        if self.bg_bmp2 != None:
-            dc.DrawBitmap(self.bg_bmp2, 0, 0)
+        if self.bmp_bg != None:
+            dc.DrawBitmap(self.bmp_bg, 0, 0, True)
+            
+        if self.bmp_bg1 != None:
+            x = (sz.GetWidth() - self.bmp_bg1.GetWidth()) / 2 + 8
+            y = (sz.GetHeight() - self.bmp_bg1.GetHeight()) / 2 - 28           
+            dc.DrawBitmap(self.bmp_bg1, x, y, True)
 
 
     # Go through our list of shapes and draw them in whatever place they are.
@@ -977,20 +1274,10 @@ class DragCanvas(wx.ScrolledWindow):
             if shape.shown:
                 shape.Draw(dc)
 
-    # This is actually a sophisticated 'hit test', but in this
-    # case we're also determining which shape, if any, was 'hit'.
-    def FindShape(self, pt):
-        
-        for shape in self.shapes:
-            if shape.HitTest(pt):
-                return shape
-            
-        return None
-
-
     # Clears the background, then redraws it. If the DC is passed, then
     # we only do so in the area so designated. Otherwise, it's the whole thing.
     def OnEraseBackground(self, evt):
+        
         dc = evt.GetDC()
         if not dc:
             dc = wx.ClientDC(self)
@@ -1000,6 +1287,7 @@ class DragCanvas(wx.ScrolledWindow):
 
     # Fired whenever a paint event occurs
     def OnPaint(self, evt):
+        
         dc = wx.PaintDC(self)
         self.PrepareDC(dc)
         self.DrawShapes(dc)
@@ -1014,6 +1302,7 @@ class DragCanvas(wx.ScrolledWindow):
 
     # Left mouse button up.
     def OnLeftUp(self, evt):
+        
         if not self.dragImage or not self.dragShape:
             self.dragImage = None
             self.dragShape = None
@@ -1070,9 +1359,7 @@ class DragCanvas(wx.ScrolledWindow):
             self.RefreshRect(self.dragShape.GetRect(), True)
             self.Update()
 
-            self.dragImage = wx.DragImage(self.dragShape.bmp,
-                                              wx.StockCursor(wx.CURSOR_HAND))
-            
+            self.dragImage = wx.DragImage(self.dragShape.bmp, wx.StockCursor(wx.CURSOR_HAND))
             hotspot = self.dragStartPos - self.dragShape.pos
             self.dragImage.BeginDrag(hotspot, self, self.dragShape.fullscreen)
 
@@ -1325,15 +1612,17 @@ class MahjongSettingDlg(wx.Dialog):
             self.Bind(wx.EVT_TEXT, self.OnChangeSpinMahjongTotalCount, mahjong_ctrl["mahjong_count"])         
    
         
+        self.Bind(wx.EVT_CLOSE, self.OnClose)
+        
         
     def ImageMerge(self, mahjong_img, mahjong_bg): 
         mahjong_bmp = wx.EmptyBitmapRGBA(mahjong_bg.GetWidth(), mahjong_bg.GetHeight())
-        memDC = wx.MemoryDC()
-        memDC.SelectObject(mahjong_bmp)  
+        mem_dc = wx.MemoryDC()
+        mem_dc.SelectObject(mahjong_bmp)  
         mahjong_img = mahjong_img.ConvertToImage().Scale(mahjong_bg.GetWidth() - 8, mahjong_bg.GetHeight() - 20)
         mahjong_img = mahjong_img.ConvertToBitmap()        
-        memDC.DrawBitmap(mahjong_bg, 0, 0, True)
-        memDC.DrawBitmap(mahjong_img, (mahjong_bg.GetWidth()-mahjong_img.GetWidth()) / 2, 0, True)  
+        mem_dc.DrawBitmap(mahjong_bg, 0, 0, True)
+        mem_dc.DrawBitmap(mahjong_img, (mahjong_bg.GetWidth()-mahjong_img.GetWidth()) / 2, 0, True)  
         
         mahjong_bmp = mahjong_bmp.ConvertToImage().Scale(mahjong_bmp.GetWidth() - 4, mahjong_bmp.GetHeight() - 6)
         mahjong_bmp = mahjong_bmp.ConvertToBitmap()            
@@ -1355,7 +1644,7 @@ class MahjongSettingDlg(wx.Dialog):
         self.spin_mahjong_banker_seat_id.SetValue(self.parent.config.mahjong_banker_seat_id)
         self.parent.config.mahjong_banker_seat_id = self.spin_mahjong_banker_seat_id.GetValue()
         
-        self.spin_mahjong_test_count.SetValue(self.parent.config.mahjong_test_count)
+        self.spin_mahjong_test_count.SetValue(self.parent.config.mahjong_test_count if self.parent.config.mahjong_test_count != 0 else 1)
         self.parent.config.mahjong_test_count = self.spin_mahjong_test_count.GetValue()        
         
         mahjong_indexs = [0 for i in range(MAHJONG_MAX_INDEX)]
@@ -1440,6 +1729,34 @@ class MahjongSettingDlg(wx.Dialog):
                 
         return mahjong_datas
     
+    def AdjustMahjongDatas(self, mahjong_datas):
+        
+        config = self.parent.config
+        
+        if len(mahjong_datas) > 0:
+            random.shuffle(mahjong_datas)
+        
+        config.heap_mahjong_datas = []
+        config.player_mahjong_datas = []
+        if config.mahjong_player_count > 0:
+            
+            for seat_id in range(config.mahjong_player_count):
+                mahjong_count = NORMAL_MAHJONG_COUNT if seat_id != config.mahjong_banker_seat_id else NORMAL_MAHJONG_COUNT + 1
+                if len(mahjong_datas) >= mahjong_count: 
+                    player_mahjong_datas = mahjong_datas[0 : mahjong_count]
+                    del mahjong_datas[0 : mahjong_count]
+                    config.player_mahjong_datas.append(player_mahjong_datas)
+                elif len(mahjong_datas) > 0:
+                    player_mahjong_datas = mahjong_datas[0 : ]
+                    del mahjong_datas[0 : ]
+                    config.player_mahjong_datas.append(player_mahjong_datas)                    
+                
+        if len(mahjong_datas) > 0:
+            for mahjong_data in mahjong_datas:
+                config.heap_mahjong_datas.append(mahjong_data)
+                
+                
+    
     def UpdateMahjongTotalCount(self):
         
         mahjong_total_count = 0
@@ -1477,6 +1794,12 @@ class MahjongSettingDlg(wx.Dialog):
         
         self.spin_mahjong_total_count.SetValue(mahjong_total_count)
         self.parent.config.mahjong_total_count = mahjong_total_count
+        
+    def OnClose(self, evt):
+        
+        mahjong_datas =  self.GetMahjongDatas()
+        self.AdjustMahjongDatas(mahjong_datas)
+        evt.Skip()
         
     
     def OnCheckBox(self, evt):
@@ -1591,31 +1914,39 @@ class MahjongMainFrame(wx.Frame):
     
     def __init__(self):
         
-        wx.Frame.__init__(self, parent = None, id = -1, title = u'麻将做牌工具', size = (960,640)) 
+        wx.Frame.__init__(self, parent = None, id = -1, title = u'麻将做牌工具') 
         
-        self.SetMinClientSize((960, 640))
+        self.SetWindowStyle(self.GetWindowStyle() & ~wx.MAXIMIZE_BOX)
+        self.SetSize(self.ClientToWindowSize((960, 640)))
+        self.SetMinSize(self.GetSize())
+        self.SetMaxSize(self.GetSize())
         
         self.config = MahjongConfig()
-        self.config.Read("MahjongConfig.ini")
-        #self.config.ReadJson("MahjongConfig.json") 
+        if self.config.Read("MahjongConfig.ini") == False:
+            self.config.ReadJson("MahjongConfig.json")
+        self.save_config_path = None
         
-        self.panel = wx.Panel(self)
         self.canvas = DragCanvas(self)
         self.canvas.SetSize(self.GetClientSize())
         
         self.btn_setting = wx.Button(self.canvas, label=u"设置", size = (40, -1))
+        self.btn_config_path = wx.Button(self.canvas, label=u"设置保存路径", size = (90, -1))
+        self.btn_save = wx.Button(self.canvas, label=u"保存", size = (40, -1))
+        settings_sizer = wx.BoxSizer(orient=wx.HORIZONTAL)
+        self.canvas.SetSizer(settings_sizer)
+        settings_sizer.Add(self.btn_setting, 0, wx.LEFT, 2)
+        settings_sizer.AddStretchSpacer(1)
+        settings_sizer.Add(self.btn_config_path, 0, wx.RIGHT, 4)
+        settings_sizer.Add(self.btn_save, 0, wx.RIGHT, 2)
         
-        frame_sizer = wx.BoxSizer(orient=wx.HORIZONTAL)
-        self.panel.SetSizer(frame_sizer)
-        self.panel.SetBackgroundColour(wx.Colour(255,255,255))
+        frame_sizer = wx.BoxSizer(orient=wx.VERTICAL)
+        self.SetSizer(frame_sizer)
+        frame_sizer.Add(self.canvas, 1, wx.ALL|wx.EXPAND, 0)
         
-        frame_sizer.Add(self.canvas, 1, wx.ALL|wx.EXPAND,2)
-        
-        self.Bind(wx.EVT_SIZE, self.OnSize)
-        self.Bind(wx.EVT_MAXIMIZE, self.OnMaxSize)
-        self.Bind(wx.EVT_ICONIZE, self.OnMinSize)
-        
+        self.Bind(wx.EVT_CLOSE,  self.OnClose)
         self.Bind(wx.EVT_BUTTON, self.OnBtnSetting, self.btn_setting)
+        self.Bind(wx.EVT_BUTTON, self.OnBtnConfigPath, self.btn_config_path)
+        self.Bind(wx.EVT_BUTTON, self.OnBtnSave, self.btn_save)
         
     def __del__(self):
         
@@ -1623,31 +1954,51 @@ class MahjongMainFrame(wx.Frame):
         self.config.WriteJson("MahjongConfig.json")
         print('save config to file')
         
-    def OnSize(self, evt): 
+    def OnClose(self, evt):
+ 
+        self.canvas.SaveMahjongViewToConfig()
+        evt.Skip()
         
-        self.canvas.SetSize(self.GetClientSize())
-        self.canvas.Refresh()
-        
-    def OnMaxSize(self, evt): 
-        
-        self.canvas.SetSize(self.GetClientSize())
-        self.canvas.Refresh()
-        
-    def OnMinSize(self, evt): 
-        
-        self.canvas.SetSize(self.GetClientSize())
-        self.canvas.Refresh()
-        
-        
+
     def OnBtnSetting(self, evt):
         
-        mahjong_datas = []
         setting_dlg = MahjongSettingDlg(self)
         setting_dlg.ShowModal()
-        mahjong_datas = setting_dlg.GetMahjongDatas()
-        self.canvas.AdjustMahjongDatas(mahjong_datas)
-        self.canvas.UpdateMahjongView()
         setting_dlg.Destroy()
+        
+        self.canvas.ResetMahjongView()
+        self.canvas.UpdateMahjongView()
+        
+    def OnBtnConfigPath(self,  evt):
+        
+        wildcard = "config file format ini (MahjongConfig.ini)|*.ini|"     \
+                   "config file format json (MahjongConfig.json)|*.json|" \
+                   "All files (*.*)|*.*"        
+        file_dlg = wx.FileDialog(self, message="Save file as ...", defaultDir=os.getcwd(),
+                                  defaultFile="MahjongConfig.ini", wildcard=wildcard, style=wx.SAVE)
+        file_dlg.SetFilterIndex(0)
+        if file_dlg.ShowModal() == wx.ID_OK:
+            self.save_config_path = file_dlg.GetPath()
+        
+        
+    def OnBtnSave(self, evt):
+        
+        if self.save_config_path != None:
+            self.canvas.SaveMahjongViewToConfig()
+            if os.path.isdir(self.save_config_path):
+                save_path =  os.path.join(self.save_config_path, "MahjongConfig.ini")
+                self.config.Write(save_path)
+                save_path =  os.path.join(self.save_config_path, "MahjongConfig.json")
+                self.config.WriteJson(save_path)
+            else:
+                file_name = os.path.basename(self.save_config_path)
+                ext_name =  os.path.splitext(file_name)[1]
+                if ext_name.lower() == '.json':
+                    self.config.WriteJson(self.save_config_path)
+                else:
+                    self.config.Write(self.save_config_path)
+            
+            wx.MessageBox(u"保存成功！", u"温馨提示", wx.OK, self)
         
 
 class MahjongApp(wx.App):  
