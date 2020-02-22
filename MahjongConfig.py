@@ -1895,6 +1895,7 @@ class MahjongMainFrame(wx.Frame):
         
         wx.Frame.__init__(self, parent = None, id = -1, title = u'麻将做牌工具') 
         
+        self.SetIcon(wx.Icon("images/mahjong.ico"))
         self.SetWindowStyle(self.GetWindowStyle() & ~wx.MAXIMIZE_BOX)
         self.SetSize(self.ClientToWindowSize((960, 640)))
         self.SetMinSize(self.GetSize())
