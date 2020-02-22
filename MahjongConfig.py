@@ -1168,7 +1168,7 @@ class DragCanvas(wx.ScrolledWindow):
             if mahjong_view.IsShow():
                 player_mahjong_datas =  mahjong_view.GetHandMahjongs()
                 
-            if seat_id < config.mahjong_player_count:
+            if seat_id < config.mahjong_player_count and seat_id < len(config.player_mahjong_datas):
                 config.player_mahjong_datas[seat_id] = player_mahjong_datas
         
         if config.mahjong_test_count <= 0:
